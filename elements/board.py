@@ -2,15 +2,15 @@ import pygame
 from constants import *
 
 class Board:
-    def __init__(self, pos: tuple, size: int | float, paddingRatio=0.25, lineColor='white'):
+    def __init__(self, pos: tuple, size: int | float, paddingRatio=0.25, lineColor='black'):
         self.size = size
         self.padding = size/3 * paddingRatio
         self.pos = pygame.Vector2(*pos)
         self.lineColor = lineColor
 
         self.squares = [
-            ['x', ' ', ' '],
-            [' ', 'o', ' '],
+            [' ', ' ', ' '],
+            [' ', ' ', ' '],
             [' ', ' ', ' '],
         ]
 
@@ -36,7 +36,7 @@ class Board:
             pygame.draw.line(screen, self.lineColor, (x, y1), (x, y2), 2)
 
     def drawSquare(self, screen, value, colIndex, rowIndex):
-        color = 'red' if value == 'x' else 'blue'
+        color = 'black'
         surf = self.font.render(value, True, color)
 
         x = self.pos.x + colIndex * self.size/3 + self.size/3/2
@@ -60,6 +60,16 @@ class Board:
     def draw(self, screen):
         self.drawLines(screen)
         self.drawSquares(screen)
+
+    def makeMove(self, x, y, player):
+        relX, relY = x - self.pos.x, y - self.pos.y
+
+        colIndex = int(relX / (self.size / 3))
+        rowIndex = int(relY / (self.size / 3))
+
+        self.squares[colIndex][rowIndex] = player
+
+        return colIndex, rowIndex
 
     def update(self, screen):
         self.draw(screen)

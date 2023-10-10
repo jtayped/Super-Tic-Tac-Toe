@@ -15,6 +15,9 @@ class TicTacToe:
         self.board = Board((0, 0), WIDTH)
         self.initBoard()
 
+        self.nextSquare = (1, 1)
+        self.nextPlayer = 'x'
+
     def initBoard(self):
         squareSize = WIDTH//3
 
@@ -24,19 +27,52 @@ class TicTacToe:
                 y = rowIndex * squareSize
                 
                 self.board.squares[colIndex][rowIndex] = (
-                    Board((x, y), squareSize, 0.6, 'gray')
+                    Board((x, y), squareSize, 0.6, 'black')
                 )
+
+    def drawNextSquare(self):
+        x = WIDTH//3 * self.nextSquare[1]
+        y = HEIGHT//3 * self.nextSquare[0]
+
+        pygame.draw.rect(
+            self.screen, 'red',
+            (x, y, WIDTH//3+2, HEIGHT//3+2),
+            4
+        )
+
+    def invertPlayer(self):
+        if self.nextPlayer == 'x':
+            self.nextPlayer = 'o'
+        else:
+            self.nextPlayer = 'x'
+        
+    def handleMove(self, x, y):
+        # Calculate square index
+        colIndex, rowIndex = int(x / (WIDTH / 3)), int(y / (HEIGHT / 3))
+
+        # Check if in appropriate square
+        if colIndex == self.nextSquare[0] and rowIndex == self.nextSquare[1]:
+            board = self.board.squares[colIndex][rowIndex]
+
+            colIndex2, rowIndex2 = board.makeMove(x, y, self.nextPlayer)
+            self.nextSquare = (rowIndex2, colIndex2)
+
+            self.invertPlayer()
 
     def events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.gameOver = True
+            
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self.handleMove(*event.pos)
 
     def update(self):
         self.events()
-        self.screen.fill('gray12')
+        self.screen.fill('white')
 
         self.board.update(self.screen)
+        self.drawNextSquare()
 
         pygame.display.flip()
         self.dt = self.clock.tick(FPS)
