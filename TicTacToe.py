@@ -18,6 +18,8 @@ class TicTacToe:
         self.nextSquare = (1, 1)
         self.nextPlayer = 'x'
 
+        self.history = [self.nextSquare]
+
     def initBoard(self):
         squareSize = WIDTH//3
 
@@ -27,12 +29,12 @@ class TicTacToe:
                 y = rowIndex * squareSize
                 
                 self.board.squares[colIndex][rowIndex] = (
-                    Board((x, y), squareSize, 0.6, 'black')
+                    Board((x, y), squareSize, 0.6, 1, 'black')
                 )
 
     def drawNextSquare(self):
-        x = WIDTH//3 * self.nextSquare[1]
-        y = HEIGHT//3 * self.nextSquare[0]
+        x = WIDTH//3 * self.nextSquare[0]
+        y = HEIGHT//3 * self.nextSquare[1]
 
         pygame.draw.rect(
             self.screen, 'red',
@@ -54,10 +56,14 @@ class TicTacToe:
         if colIndex == self.nextSquare[0] and rowIndex == self.nextSquare[1]:
             board = self.board.squares[colIndex][rowIndex]
 
-            colIndex2, rowIndex2 = board.makeMove(x, y, self.nextPlayer)
-            self.nextSquare = (rowIndex2, colIndex2)
+            if board.validMove(board.squares, x, y):
+                newBoard, colIndex2, rowIndex2 = board.makeMove(board.squares, x, y, self.nextPlayer)
+                board.squares = newBoard
 
-            self.invertPlayer()
+                self.nextSquare = (colIndex2, rowIndex2)
+                self.history.append(self.nextSquare)
+
+                self.invertPlayer()
 
     def events(self):
         for event in pygame.event.get():

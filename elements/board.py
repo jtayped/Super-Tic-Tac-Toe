@@ -2,9 +2,10 @@ import pygame
 from constants import *
 
 class Board:
-    def __init__(self, pos: tuple, size: int | float, paddingRatio=0.25, lineColor='black'):
+    def __init__(self, pos: tuple, size: int | float, paddingRatio=0.25, lineWidth=2, lineColor='black'):
         self.size = size
         self.padding = size/3 * paddingRatio
+        self.lineWidth = lineWidth
         self.pos = pygame.Vector2(*pos)
         self.lineColor = lineColor
 
@@ -24,7 +25,7 @@ class Board:
 
             y = self.pos.y + self.size/3 + i * self.size/3
             
-            pygame.draw.line(screen, self.lineColor, (x1, y), (x2, y), 2)
+            pygame.draw.line(screen, self.lineColor, (x1, y), (x2, y), self.lineWidth)
 
         # Draw vertical lines
         for i in range(2):
@@ -61,15 +62,27 @@ class Board:
         self.drawLines(screen)
         self.drawSquares(screen)
 
-    def makeMove(self, x, y, player):
+    def getIndex(self, x, y):
         relX, relY = x - self.pos.x, y - self.pos.y
 
         colIndex = int(relX / (self.size / 3))
         rowIndex = int(relY / (self.size / 3))
 
-        self.squares[colIndex][rowIndex] = player
-
         return colIndex, rowIndex
+
+    def validMove(self, board, x, y):
+        colIndex, rowIndex = self.getIndex(x, y)
+        square = board[colIndex][rowIndex]
+
+        return (
+            square == ' '
+        )
+
+    def makeMove(self, board, x, y, player):
+        colIndex, rowIndex = self.getIndex(x, y)
+        board[colIndex][rowIndex] = player
+
+        return board, colIndex, rowIndex
 
     def update(self, screen):
         self.draw(screen)
