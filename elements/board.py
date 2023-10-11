@@ -15,7 +15,7 @@ class Board:
             [' ', ' ', ' '],
         ]
 
-        self.font = pygame.font.Font(None, 70)
+        self.font = pygame.font.Font(None, int(size/3.5))
 
     def drawLines(self, screen):
         # Draw horizontal lines

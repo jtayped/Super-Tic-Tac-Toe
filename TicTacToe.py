@@ -60,7 +60,15 @@ class TicTacToe:
                 newBoard, colIndex2, rowIndex2 = board.makeMove(board.squares, x, y, self.nextPlayer)
                 board.squares = newBoard
 
-                self.nextSquare = (colIndex2, rowIndex2)
+                # Check win
+                winner = checkWin(board.squares)
+                if winner is not None:
+                    self.board.squares[self.nextSquare[0]][self.nextSquare[1]] = winner
+                
+                for move in reversed(self.history):
+                    if isinstance(self.board.squares[move[0]][move[1]], type(Board)):
+                        self.nextSquare = (colIndex2, rowIndex2)
+
                 self.history.append(self.nextSquare)
 
                 self.invertPlayer()

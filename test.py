@@ -1,7 +1,3 @@
-import pygame
-
-WIDTH, HEIGHT = 720, 720
-FPS = 60
 
 def checkWin(board):
     for col in board:
@@ -25,3 +21,12 @@ def checkWin(board):
         return board[2][0]
     
     return None
+
+
+board = [
+    ['o', ' ', 'o'],
+    ['x', ' ', 'x'],
+    ['o', 'o', 'o'],
+]
+
+print(checkWin(board))
