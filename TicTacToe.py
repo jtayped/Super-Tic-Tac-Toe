@@ -65,12 +65,17 @@ class TicTacToe:
                 if winner is not None:
                     self.board.squares[self.nextSquare[0]][self.nextSquare[1]] = winner
                 
-                for move in reversed(self.history):
-                    if isinstance(self.board.squares[move[0]][move[1]], type(Board)):
-                        self.nextSquare = (colIndex2, rowIndex2)
+                self.nextSquare = (colIndex2, rowIndex2)
+                
+                if isinstance(self.board.squares[colIndex2][rowIndex2], str):
+                    for move in reversed(self.history):
+                        squareInHistory = self.board.squares[move[0]][move[1]]
 
+                        if not isinstance(squareInHistory, str):
+                            self.nextSquare = move
+                            break
+                
                 self.history.append(self.nextSquare)
-
                 self.invertPlayer()
 
     def events(self):
