@@ -3,7 +3,7 @@ import pygame
 WIDTH, HEIGHT = 720, 720
 FPS = 60
 
-def checkWin(board, mainBoard=False):
+def checkWin(board):
     for col in board:
         if col[0] == col[1] == col[2] and col[0] != ' ':
             return col[0]
